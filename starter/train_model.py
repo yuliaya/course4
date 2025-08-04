@@ -87,6 +87,9 @@ class CensusClassifier:
 
 if __name__ == "__main__":
     data = pd.read_csv("data/census.csv")
+    # Append test data
+    test_data = pd.read_csv("data/test_data.csv")
+    data = pd.concat([data, test_data], ignore_index=True)
     census_model = CensusClassifier(data)
     census_model.train_save_model()
     model_performance, slices_performance = census_model.test_performance()
