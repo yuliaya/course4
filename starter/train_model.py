@@ -13,7 +13,13 @@ from starter.ml.data import process_data
 
 
 def performance_metrics(y_actual, y_pred):
-    return {f1_score(y_actual, y_pred, zero_division=0), precision_score(y_actual, y_pred, zero_division=0)}
+    return {"f1_score": f1_score(y_actual, y_pred, zero_division=0),
+            "precision": precision_score(y_actual, y_pred, zero_division=0)}
+
+def analyze_slice_output(data, y_pred, y_actual, col, category):
+    y_pred_category = y_pred[data[col] == category]
+    y_actual_category = y_actual[data[col] == category]
+    return performance_metrics(y_actual_category, y_pred_category)
 
 class CensusClassifier:
 
@@ -62,21 +68,20 @@ class CensusClassifier:
     def test_performance(self):
         # Proces the test data with the process_data function.
 
-        performance_output = dict()
         y_pred = self.inference(self.test)
         y_actual_str = self.test[self.label]
         y_actual = self.lb.transform(y_actual_str).ravel()
 
-        performance_output["model"] = performance_metrics(y_actual, y_pred)
+        model_performance = performance_metrics(y_actual, y_pred)
+        slices_performance = dict()
 
         for col in self.cat_features:
-            performance_output[col] = dict()
+        # for col in ["workclass"]:
+            slices_performance[col] = dict()
             for category in self.train[col].unique():
-                y_pred_category = y_pred[self.test[col] == category]
-                y_actual_category = y_actual[self.test[col] == category]
-                performance_output[col][category] = performance_metrics(y_actual_category, y_pred_category)
+                slices_performance[col][category] = analyze_slice_output(self.test, y_pred, y_actual, col, category)
 
-        return performance_output
+        return model_performance, slices_performance
 
 
 
@@ -84,4 +89,7 @@ if __name__ == "__main__":
     data = pd.read_csv("data/census.csv")
     census_model = CensusClassifier(data)
     census_model.train_save_model()
-    print(census_model.test_performance())
+    model_performance, slices_performance = census_model.test_performance()
+    print(model_performance)
+    with open("data/slice_output.txt", "w") as output_file:
+        output_file.write(str(slices_performance))
