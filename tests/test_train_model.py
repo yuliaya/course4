@@ -21,7 +21,7 @@ def test_performance_metrics_returns_dict():
     y_actual = np.array([0, 1, 0])
     y_pred = np.array([0, 1, 1])
     result = performance_metrics(y_actual, y_pred)
-    assert isinstance(result, set)  # Your current function returns a set
+    assert isinstance(result, dict)  # Your current function returns a set
 
 def test_classifier_can_train():
     clf = CensusClassifier(dummy_data)
