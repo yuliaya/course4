@@ -3,7 +3,7 @@ from main import app
 
 client = TestClient(app)
 
-# Test case that should predict <=50K (taken from training data)
+# Test case that should predict <=50K (included in both train and test sets)
 sample_input_low_income = {
     "age": 39,
     "workclass": "State-gov",
@@ -21,7 +21,7 @@ sample_input_low_income = {
     "native-country": "United-States"
 }
 
-# Test case that should predict >50K (taken from training data)
+# Test case that should predict >50K (included in both train and test sets)
 sample_input_high_income = {
     "age": 52,
     "workclass": "Self-emp-not-inc",
@@ -47,9 +47,13 @@ def test_get_root():
 def test_post_predict_low_income():
     response = client.post("/predict", json=sample_input_low_income)
     assert response.status_code == 200
-    assert response.json()["prediction"] in ["<=50K", ">50K"]
+    prediction = response.json()["prediction"]
+    assert prediction in ["<=50K", ">50K"]
+    print(f"Low income test prediction: {prediction}")
 
 def test_post_predict_high_income():
     response = client.post("/predict", json=sample_input_high_income)
     assert response.status_code == 200
-    assert response.json()["prediction"] in ["<=50K", ">50K"]
+    prediction = response.json()["prediction"]
+    assert prediction in ["<=50K", ">50K"]
+    print(f"High income test prediction: {prediction}")

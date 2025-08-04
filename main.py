@@ -63,22 +63,6 @@ def read_root():
 @app.post("/predict")
 def predict(input_data: InferenceInput):
     data_dict = input_data.dict(by_alias=True)
-    data_df = np.array([[
-        data_dict["age"],
-        data_dict["workclass"],
-        data_dict["fnlgt"],
-        data_dict["education"],
-        data_dict["education-num"],
-        data_dict["marital-status"],
-        data_dict["occupation"],
-        data_dict["relationship"],
-        data_dict["race"],
-        data_dict["sex"],
-        data_dict["capital-gain"],
-        data_dict["capital-loss"],
-        data_dict["hours-per-week"],
-        data_dict["native-country"]
-    ]])
 
     from starter.ml.data import process_data
 
