@@ -19,9 +19,9 @@ cat_features = [
     "sex",
     "native-country",
 ]
-X_train, y_train, encoder, lb = process_data(
-    train, categorical_features=cat_features, label="salary", training=True
-)
+# X_train, y_train, encoder, lb = process_data(
+#     train, categorical_features=cat_features, label="salary", training=True
+# )
 
 # Proces the test data with the process_data function.
 
